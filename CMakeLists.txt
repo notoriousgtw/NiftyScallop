@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.24)
 
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI")
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
 set(VCPKG_CMAKE_CONFIGURE_OPTIONS -DBUILD_SHARED_LIBS=OFF -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON)
+set(DCMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
  
 # Static runtime for MSVC
 if(MSVC)
@@ -35,16 +38,9 @@ FetchContent_MakeAvailable(glfw)
 find_package(imgui CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 
-# Find libxlsxwriter's include directory
-find_path(XLSXWRITER_INCLUDE_DIR NAMES xlsxwriter.h HINTS ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include)
-
-# Find libxlsxwriter's library file
-find_library(XLSXWRITER_LIBRARY NAMES xlsxwriter HINTS ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/lib)
-
-include_directories("include" ${XLSX_INCLUDE_DIR})
+include_directories("include")
 
 file(GLOB SOURCES "src/*.cpp")
-
 
 add_executable(NiftyScallop ${SOURCES})
 
@@ -54,4 +50,4 @@ if (WIN32)
     target_link_libraries(NiftyScallop PRIVATE opengl32 gdi32 user32 shell32)
 endif()
 
-target_link_libraries(NiftyScallop PRIVATE ${XLSXWRITER_LIBRARY} lunasvg::lunasvg imgui::imgui glfw glad::glad)
+target_link_libraries(NiftyScallop PRIVATE lunasvg::lunasvg imgui::imgui glfw glad::glad)

@@ -1,47 +1,20 @@
-#include "ImGUIHandler.h"
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#ifndef _DEBUG
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 
-using namespace std;
+#include <NiftyScallopApp.h>
+#include <iostream>
 
 int main() {
-	// Initialize GLFW
-	if (!glfwInit())
+	try
 	{
+		Nifty::NiftyScallop scallop_app = Nifty::NiftyScallop();
+		scallop_app.Loop();
+	}
+	catch (const std::runtime_error & e)
+	{
+		std::cerr << "Caught an exception: " << e.what() << std::endl;
 		return -1;
 	}
-
-	// Set GL Version
-	const char* glsl_version = "#version 330";
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
-	// Create Window and Graphics Context
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Nifty Scallop", NULL, NULL);
-	if (window == NULL)
-		return 1;
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // Enable vsync
-
-	// Try to initialize GLAD
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		throw("Failed to initialize GLAD");
-
-	int screen_width, screen_height;
-	glfwGetFramebufferSize(window, &screen_width, &screen_height);
-	glViewport(0, 0, screen_width, screen_height);
-
-	ImGuiHandler imgui_handler;
-	imgui_handler.Init(window, glsl_version);
-	while (!glfwWindowShouldClose(window))
-	{
-		glfwPollEvents();
-		imgui_handler.BeginFrame();
-		imgui_handler.Update();
-		imgui_handler.Render();
-		glfwSwapBuffers(window);
-	}
-	imgui_handler.Shutdown();
-
 	return 0;
 }

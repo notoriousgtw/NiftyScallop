@@ -1,40 +1,17 @@
-#include "ImGUIHandler.h"
+#include "NiftyScallopApp.h"
 
-void ImGuiHandler::Init(GLFWwindow* window, const char* glsl_version)
+namespace Nifty
 {
-	//Initialize ImGui Context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	// Setup Bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init(glsl_version);
-
-	// Setup Style
-	ImGui::StyleColorsDark();
-
+NiftyScallop::NiftyScallop() : App("Nifty Scallop")
+{
 }
 
-void ImGuiHandler::BeginFrame()
+NiftyScallop::~NiftyScallop()
 {
-	// Start ImGui Frame
-	ImGui_ImplGlfw_NewFrame();
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui::NewFrame();
 }
 
-void ImGuiHandler::UpdateSvg(double scale_length, int fret_count, double fret_width, double fret_height, double scallop_depth, bool show_scallop)
+void NiftyScallop::Update()
 {
-	Nifty::FretboardSVG fretboard_svg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
-	handler.createSvgFromTemplate(fretboard_svg.svg_data);
-}
-
-void ImGuiHandler::Update()
-{
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-	ImGui::Begin("Nifty Scallop");
 	ImGui::Text("Scaloop");
 
 	static bool init = true;
@@ -49,7 +26,7 @@ void ImGuiHandler::Update()
 
 	if (init)
 	{
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 		init = false;
 	}
 
@@ -57,31 +34,31 @@ void ImGuiHandler::Update()
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Scale Length", &scale_length, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	// Number of Frets Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputInt("Number of Frets", &fret_count);
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	// Fret Width Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Fret Width", &fret_width, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	// Fret Height Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Fret Height", &fret_height, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	// Scallop Depth Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Scallop Depth", &scallop_depth, 0.0001, 0.001, "%.4f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	// Router Base Width Input
 	ImGui::SetNextItemWidth(100);
@@ -94,7 +71,7 @@ void ImGuiHandler::Update()
 	{
 	// Precision Input
 		ImGui::SetNextItemWidth(100);
-		const char* items[] = {
+		const char * items[] = {
 			"1/2",
 			"1/4",
 			"1/8",
@@ -106,7 +83,7 @@ void ImGuiHandler::Update()
 
 
 		// Pass in the preview value visible before opening the combo (it could technically be different contents or not pulled from items[])
-		const char* combo_preview_value = items[selected_precision_idx];
+		const char * combo_preview_value = items[selected_precision_idx];
 		if (ImGui::BeginCombo("Precision", combo_preview_value))
 		{
 			for (int n = 0; n < IM_ARRAYSIZE(items); n++)
@@ -153,25 +130,25 @@ void ImGuiHandler::Update()
 
 				if (display_fractions)
 				{
-					offset_quarter_str << " : " << Nifty::MixedNumber(static_cast<double>(offset_quarter), static_cast<Nifty::Precision>(selected_precision_idx + 1));
-					offset_half_str << " : " << Nifty::MixedNumber(static_cast<double>(offset_half), static_cast<Nifty::Precision>(selected_precision_idx + 1));
-					offset_three_quarter_str << " : " << Nifty::MixedNumber(static_cast<double>(offset_three_quarter), static_cast<Nifty::Precision>(selected_precision_idx + 1));
+					offset_quarter_str << " : " << Num::MixedNumber(static_cast<double>(offset_quarter), static_cast<Num::Precision>(selected_precision_idx + 1));
+					offset_half_str << " : " << Num::MixedNumber(static_cast<double>(offset_half), static_cast<Num::Precision>(selected_precision_idx + 1));
+					offset_three_quarter_str << " : " << Num::MixedNumber(static_cast<double>(offset_three_quarter), static_cast<Num::Precision>(selected_precision_idx + 1));
 				}
 
 				switch (col)
 				{
-					case 0:
-						ImGui::Text("%d", row);
-						break;
-					case 1:
-						ImGui::Text("%s", offset_quarter_str.str().c_str());
-						break;
-					case 2:
-						ImGui::Text("%s", offset_half_str.str().c_str());
-						break;
-					case 3:
-						ImGui::Text("%s", offset_three_quarter_str.str().c_str());
-						break;
+				case 0:
+					ImGui::Text("%d", row);
+					break;
+				case 1:
+					ImGui::Text("%s", offset_quarter_str.str().c_str());
+					break;
+				case 2:
+					ImGui::Text("%s", offset_half_str.str().c_str());
+					break;
+				case 3:
+					ImGui::Text("%s", offset_three_quarter_str.str().c_str());
+					break;
 				}
 			}
 		}
@@ -181,29 +158,12 @@ void ImGuiHandler::Update()
 	//fret.Display({ 512, 512 });
 	//Nifty::FretSVG();
 
-	ImGui::Checkbox("Show Scallop", &show_scallop);
-	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		UpdateSvg(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+	if (ImGui::Checkbox("Show Scallop", &show_scallop))
+		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-	ImGui::BeginChild("Fretboard", ImVec2(ImGui::GetContentRegionAvail().x, handler.height), ImGuiChildFlags_None, window_flags);
-	ImGui::Image((void*)(intptr_t)handler.texture_id, ImVec2((float)handler.width, (float)handler.height));
+	ImGui::BeginChild("Fretboard", ImVec2(ImGui::GetContentRegionAvail().x, fretboard_svg.GetHeight()), ImGuiChildFlags_None, window_flags);
+	ImGui::Image((intptr_t)fretboard_svg.GetTextureID(), ImVec2((float)fretboard_svg.GetWidth(), (float)fretboard_svg.GetHeight()));
 	ImGui::EndChild();
-
-	ImGui::End();
 }
-
-void ImGuiHandler::Render()
-{
-	// Render ImGui
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void ImGuiHandler::Shutdown()
-{
-	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
 }

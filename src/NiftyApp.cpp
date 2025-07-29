@@ -1,6 +1,7 @@
 #include "NiftyApp.h"
-
-NiftyApp::NiftyApp(std::string name)
+namespace Nifty
+{
+App::App(std::string name)
 {
 	this->name = name;
 
@@ -9,7 +10,7 @@ NiftyApp::NiftyApp(std::string name)
 		throw("Failed to initialize GLFW!");
 
 	// Set GL Version
-	const char* glsl_version = "#version 330";
+	const char * glsl_version = "#version 330";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -31,7 +32,8 @@ NiftyApp::NiftyApp(std::string name)
 	//Initialize ImGui Context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO();
+	io = &ImGui::GetIO();
+	io->IniFilename = NULL;
 
 	// Setup Bindings
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -41,7 +43,7 @@ NiftyApp::NiftyApp(std::string name)
 	ImGui::StyleColorsDark();
 }
 
-void NiftyApp::Loop()
+void App::Loop()
 {
 	while (!glfwWindowShouldClose(window))
 	{
@@ -54,7 +56,7 @@ void NiftyApp::Loop()
 	}
 }
 
-NiftyApp::~NiftyApp()
+App::~App()
 {
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
@@ -62,7 +64,7 @@ NiftyApp::~NiftyApp()
 	ImGui::DestroyContext();
 }
 
-void NiftyApp::BeginFrame()
+void App::BeginFrame()
 {
 	// Start ImGui Frame
 	ImGui_ImplGlfw_NewFrame();
@@ -70,18 +72,19 @@ void NiftyApp::BeginFrame()
 	ImGui::NewFrame();
 	// Set the next window position and size to cover the entire display
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+	ImGui::SetNextWindowSize(io->DisplaySize);
 	ImGui::Begin(this->name.c_str(), nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
 }
 
-void NiftyApp::EndFrame()
+void App::EndFrame()
 {
 	ImGui::End();
 }
 
-void NiftyApp::Render()
+void App::Render()
 {
 	// Render ImGui
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
 }

@@ -7,22 +7,25 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-class NiftyApp
+namespace Nifty
+{
+class App
 {
 public:
-	NiftyApp() = delete;
-	NiftyApp(std::string name);
+	App() = delete;
+	App(std::string name);
 
-    void Loop();
-	
-	~NiftyApp();
+	void Loop();
+
+	~App();
 private:
 	std::string name;
-	ImGuiIO io;
-	GLFWwindow* window;
+	ImGuiIO* io;
+	GLFWwindow * window;
 
 	void BeginFrame();
-	virtual void Update() = 0;  
+	virtual void Update() = 0;
 	void EndFrame();
 	void Render();
 };
+}

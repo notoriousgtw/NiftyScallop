@@ -14,13 +14,23 @@ namespace Nifty
 		ThreeQuarter
 	};
 
+	enum class RouterBit
+	{
+		ThreeEighth,
+		FiveSixteenth,
+		ThreeSixteenth,
+		Eighth
+	};
+
+	const std::map<RouterBit, double> router_bits = {
+		{RouterBit::ThreeEighth, 0.375},
+		{RouterBit::FiveSixteenth, 0.3132},
+		{RouterBit::ThreeSixteenth, 0.1875},
+		{RouterBit::Eighth, 0.125}
+	};
+
     typedef std::map<ScallopOffsetType, double> ScallopOffsetMap;
 	typedef std::map<int, ScallopOffsetMap> ScallopOffsetTable;
-
-	inline double FretCalculator(double scale_length, int fret_number)
-	{
-		return scale_length - (scale_length / pow(2.0, fret_number / 12.0));
-	}
 
 	inline ScallopOffsetTable ScallopCalculator(const double scale_length, const int fret_count, const double fret_width, const double router_base_width)
 	{
