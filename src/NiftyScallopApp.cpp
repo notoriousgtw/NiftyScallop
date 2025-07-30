@@ -163,7 +163,7 @@ void NiftyScallop::Update()
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 	ImGui::BeginChild("Fretboard", ImVec2(ImGui::GetContentRegionAvail().x, fretboard_svg.GetHeight()), ImGuiChildFlags_None, window_flags);
-	ImGui::Image((void*)(intptr_t)fretboard_svg.GetTextureID(), ImVec2((float)fretboard_svg.GetWidth(), (float)fretboard_svg.GetHeight()));
+	ImGui::Image((intptr_t)fretboard_svg.GetTextureID(), ImVec2((float)fretboard_svg.GetWidth(), (float)fretboard_svg.GetHeight()));
 	ImGui::EndChild();
 }
 }

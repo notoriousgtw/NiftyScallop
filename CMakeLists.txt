@@ -37,8 +37,11 @@ FetchContent_MakeAvailable(glfw)
 
 find_package(imgui CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+#find_package(NiftyLib CONFIG REQUIRED)
 
-include_directories("include")
+add_subdirectory(NiftyLib)
+
+include_directories("src/include")
 
 file(GLOB SOURCES "src/*.cpp")
 
@@ -50,4 +53,4 @@ if (WIN32)
     target_link_libraries(NiftyScallop PRIVATE opengl32 gdi32 user32 shell32)
 endif()
 
-target_link_libraries(NiftyScallop PRIVATE lunasvg::lunasvg imgui::imgui glfw glad::glad)
+target_link_libraries(NiftyScallop PRIVATE NiftyLib lunasvg::lunasvg imgui::imgui glfw glad::glad)

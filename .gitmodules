@@ -1,0 +1,3 @@
+[submodule "NiftyLib"]
+	path = NiftyLib
+	url = https://github.com/notoriousgtw/NiftyLib.git
