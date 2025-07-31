@@ -14,7 +14,9 @@ public:
 	~NiftyScallop();
 
 private:
+	virtual void BeginFrame() override;
 	virtual void Update() override;
+	virtual void EndFrame() override;
 	SVG::Fretboard fretboard_svg;
 	ScallopOffsetTable router_offsets;
 };

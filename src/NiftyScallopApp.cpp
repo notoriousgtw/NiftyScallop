@@ -27,6 +27,8 @@ void NiftyScallop::Update()
 	if (init)
 	{
 		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		Scallop::FretboardData fretboard_data =
+			Scallop::FretboardData(scale_length, fret_count, 1, fret_count, fret_width, fret_height, scallop_depth);
 		init = false;
 	}
 
