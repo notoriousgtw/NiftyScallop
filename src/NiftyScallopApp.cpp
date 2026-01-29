@@ -10,6 +10,12 @@ NiftyScallop::~NiftyScallop()
 {
 }
 
+void NiftyScallop::BeginFrame()
+{}
+
+void NiftyScallop::EndFrame()
+{}
+
 void NiftyScallop::Update()
 {
 	ImGui::Text("Scaloop");
@@ -26,9 +32,9 @@ void NiftyScallop::Update()
 
 	if (init)
 	{
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 		Scallop::FretboardData fretboard_data =
-			Scallop::FretboardData(scale_length, fret_count, 1, fret_count, fret_width, fret_height, scallop_depth);
+			Scallop::FretboardData(scale_length, fret_count, 1, fret_count, fret_width, fret_height, scallop_depth, router_base_width);
 		init = false;
 	}
 
@@ -36,31 +42,30 @@ void NiftyScallop::Update()
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Scale Length", &scale_length, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
-
+		fretboard_svg.Update();
 	// Number of Frets Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputInt("Number of Frets", &fret_count);
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 
 	// Fret Width Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Fret Width", &fret_width, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 
 	// Fret Height Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Fret Height", &fret_height, 0.001, 0.01, "%.3f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 
 	// Scallop Depth Input
 	ImGui::SetNextItemWidth(100);
 	ImGui::InputDouble("Scallop Depth", &scallop_depth, 0.0001, 0.001, "%.4f");
 	if (ImGui::IsItemDeactivatedAfterEdit() || (ImGui::IsItemDeactivated() && ImGui::IsKeyPressed(ImGuiKey_Enter)))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 
 	// Router Base Width Input
 	ImGui::SetNextItemWidth(100);
@@ -161,7 +166,7 @@ void NiftyScallop::Update()
 	//Nifty::FretSVG();
 
 	if (ImGui::Checkbox("Show Scallop", &show_scallop))
-		fretboard_svg.Update(scale_length, fret_count, fret_width, fret_height, scallop_depth, show_scallop);
+		fretboard_svg.Update();
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 	ImGui::BeginChild("Fretboard", ImVec2(ImGui::GetContentRegionAvail().x, fretboard_svg.GetHeight()), ImGuiChildFlags_None, window_flags);
