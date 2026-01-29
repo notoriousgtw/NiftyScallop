@@ -2,7 +2,7 @@
   "dependencies": [
     {
       "name": "imgui",
-      "features": ["glfw-binding", "opengl3-binding", "docking-experimental"]
+      "features": [ "glfw-binding", "opengl3-binding", "docking-experimental" ]
     },
     "glm",
     "glad",
