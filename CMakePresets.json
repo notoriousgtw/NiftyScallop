@@ -1,21 +1,45 @@
 {
-  "version": 2,
-  "configurePresets": [
-    {
-      "name": "windows",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
-      "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      }
-    },
-    {
-      "name": "linux",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
-      "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "~/Development/vcpkg/scripts/buildsystems/vcpkg.cmake"
-      }
-    }
-  ]
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "Windows Debug",
+            "description": "Ninja Multi-Config: Debug",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "c:/LLVM/bin/clang.exe",
+                "CMAKE_CXX_COMPILER": "c:/LLVM/bin/clang++.exe",
+                "CMAKE_RC_COMPILER": "RC"
+            }
+        },
+        {
+            "name": "Windows Release",
+            "description": "Ninja Multi-Config: Release",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "c:/LLVM/bin/clang.exe",
+                "CMAKE_CXX_COMPILER": "c:/LLVM/bin/clang++.exe",
+                "CMAKE_RC_COMPILER": "RC",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CONFIGURATION_TYPES": "Release"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Windows Debug Build",
+            "configurePreset": "Windows Debug",
+            "configuration": "Debug",
+            "targets": ["NiftyScallop"]
+        },
+        {
+            "name": "Windows Release Build",
+            "configurePreset": "Windows Release",
+            "configuration": "Release",
+            "targets": ["NiftyScallop"]
+        }
+    ]
 }
